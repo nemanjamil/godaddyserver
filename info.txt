@@ -1,0 +1,1 @@
+// I guess you are new to Laravel, you need to turn debug mode ON in .env file to see exact error message, or go into laravel.log and see what it says. This looks like permission problem with new Laravel installation which is common issue, you need to set 777 permissions on bootstrap and storage folders.
