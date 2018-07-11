@@ -18,10 +18,19 @@ class UsersTableSeeder extends Seeder
         $password = Hash::make('sikimiki');
 
         User::create([
-            'name' => 'Nemanja Mili',
-            'email' => 'nemanjamili@gmail.com',
+            'name' => 'Nemanja Mii',
+            'email' => 'nemanjamil@gmail.com',
             'password' => $password,
         ]);
+
+
+        User::create([
+            'name' => 'Milivoje Maric',
+            'email' => 'dogovorupogledu@gmail.com',
+            'password' => $password,
+        ]);
+
+
 
     }
 }
