@@ -18,7 +18,7 @@ class CreateNotesTable extends Migration
             $table->collation = 'utf8_general_ci';
             $table->charset = 'utf8';
 
-            $table->increments('idjs');
+            $table->increments('id');
             $table->string('title');
             $table->text('textnote');
             $table->tinyInteger('typenote');

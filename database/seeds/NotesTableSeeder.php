@@ -22,14 +22,18 @@ class NotesTableSeeder extends Seeder
         while ($i < 10) {
 
             if ($i<3) {
-                DB::table('notes')->insert([
-                'title' => $faker->name(),
-                'textnote' => $faker->url(),
-                'typenote' => 3,
-                'active' => 1,
-                'color' => 1,
+
+                // solution 1
+                Notes::create([
+                    'title' => $faker->name(),
+                    'textnote' => $faker->url(),
+                    'typenote' => 3,
+                    'active' => 1,
+                    'color' => 1,
                 ]);
             } elseif ($i>= 3 and $i < 7 ) {
+
+                // solution 2
                 DB::table('notes')->insert([
                     'title' => $faker->name(),
                     'textnote' => $faker->imageUrl($width = 640, $height = 480),
