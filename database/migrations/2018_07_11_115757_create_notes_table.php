@@ -19,12 +19,14 @@ class CreateNotesTable extends Migration
             $table->charset = 'utf8';
 
             $table->increments('id');
+            $table->unsignedInteger('user_id'); //$table->integer('user_id')->unsigned();
             $table->string('title');
             $table->text('textnote');
             $table->tinyInteger('typenote');
             $table->tinyInteger('active');
             $table->tinyInteger('color');
             $table->timestamps();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');;
         });
     }
 

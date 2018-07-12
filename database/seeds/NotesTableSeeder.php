@@ -19,23 +19,25 @@ class NotesTableSeeder extends Seeder
 
         $faker = Faker::create();
         $i = 0;
-        while ($i < 10) {
+        while ($i < 20) {
 
-            if ($i<3) {
+            if ($i<7) {
 
                 // solution 1
                 Notes::create([
                     'title' => $faker->name(),
+                    'user_id' => rand(1,2),
                     'textnote' => $faker->url(),
                     'typenote' => 3,
                     'active' => 1,
                     'color' => 1,
                 ]);
-            } elseif ($i>= 3 and $i < 7 ) {
+            } elseif ($i>= 7 and $i < 14 ) {
 
                 // solution 2
                 DB::table('notes')->insert([
                     'title' => $faker->name(),
+                    'user_id' => rand(1,2),
                     'textnote' => $faker->imageUrl($width = 640, $height = 480),
                     'typenote' => 2,
                     'active' => 1,
@@ -45,6 +47,7 @@ class NotesTableSeeder extends Seeder
 
                 DB::table('notes')->insert([
                     'title' => $faker->name(),
+                    'user_id' => rand(1,2),
                     'textnote' => $faker->address() . ' ' . $faker->country(),
                     'typenote' => 1,
                     'active' => 1,

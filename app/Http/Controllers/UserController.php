@@ -19,10 +19,10 @@ class UserController extends Controller
 
     public function userdetail(Request $request,$id) {
 
-        $user = Auth::user();
+        $user = Auth::user()->id;
         dd($user);
-        dd(auth()->user()->id);
-        dd($id,$request);
+       /* dd(auth()->user()->id);
+        dd($id,$request);*/
     }
 
     public function userLogin(Request $request)
