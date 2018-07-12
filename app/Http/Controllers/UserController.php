@@ -52,6 +52,7 @@ class UserController extends Controller
     public function userregister(Request $request)
     {
 
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:255',
             'email' => 'required|email',
@@ -63,13 +64,18 @@ class UserController extends Controller
             return response()->json(['error' => $validator->errors()], 401);
         }
 
+        $userexist = User::where("email", $request->email)->first();
+        if($userexist!= null) {
+            return response()->json(['success' => "user Exist"], 200);
+        }
+
+
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
 
 
         $user = User::create($input);
         $tokenStr = $user->createToken('Token Name')->accessToken;
-
         $success['token'] = $tokenStr;
         $success['name'] = $user->name;
 
