@@ -21,6 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['prefix' => '1.0'], function () {
     Route::post('userregister',"UserController@userregister");
     Route::post('userLogin', 'UserController@userLogin');
+    Route::get('all', "NotesController@index");
 });
 
 
