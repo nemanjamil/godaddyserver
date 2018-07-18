@@ -21,12 +21,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['prefix' => '1.0'], function () {
     Route::post('userregister',"UserController@userregister");
     Route::post('userLogin', 'UserController@userLogin');
-    Route::get('all', "NotesController@index");
 });
 
 
 Route::group(['prefix' => '1.0','middleware' => 'auth:api'], function () {
-    //Route::get('all', "NotesController@index");
+    Route::get('all', "NotesController@index");
     Route::get('note/{id}', "NotesController@show");
     Route::post('addnote', "NotesController@store");
     Route::post('updatenote/{id}', "NotesController@update");
