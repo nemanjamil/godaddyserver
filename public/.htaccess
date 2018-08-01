@@ -24,7 +24,7 @@
 #Header set Access-Control-Allow-Credentials true
 #Header add Access-Control-Allow-Headers: Content-Type
 
-SetEnvIf Origin "http(s)?://(www\.)?(angularjs|angularjsv1|allowed.domain.two)$" AccessControlAllowOrigin=$0$1
+SetEnvIf Origin "http(s)?://(www\.)?(angularjs|notes-angularjs.progarden.rs|angularjsv1|allowed.domain.two)$" AccessControlAllowOrigin=$0$1
 Header set Access-Control-Allow-Origin %{AccessControlAllowOrigin}e env=AccessControlAllowOrigin
 Header set Access-Control-Allow-Credentials true
 
