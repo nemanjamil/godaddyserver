@@ -20,8 +20,8 @@ class CreateNotesTable extends Migration
 
             $table->increments('id');
             $table->unsignedInteger('user_id'); //$table->integer('user_id')->unsigned();
-            $table->string('title');
-            $table->text('textnote');
+            $table->string('title')->nullable();
+            $table->text('textnote')->nullable();
             $table->tinyInteger('typenote');
             $table->tinyInteger('active');
             $table->tinyInteger('color');

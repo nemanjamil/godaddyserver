@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 class UserController extends Controller
 {
 
+
     public function userdetails()
     {
 
@@ -17,10 +18,15 @@ class UserController extends Controller
         return response()->json(['success' => $user], 200);
     }
 
-    public function userdetail(Request $request,$id) {
+    public function userdetail(Request $request) {
 
-        $user = Auth::user()->id;
-        dd($user);
+        $user = Auth::user();
+        if (Auth::user()) {
+            return response()->json(['success' => true,'user' => $user->id], 200);
+        } else {
+            return response()->json(['success' => false], 200);
+        }
+
        /* dd(auth()->user()->id);
         dd($id,$request);*/
     }
@@ -44,7 +50,7 @@ class UserController extends Controller
             return response()->json(['success' => $success], 200);
 
         } else {
-            return response()->json(['success' => "UnAuthorised"], 400);
+            return response()->json(['success' => "Nema Tog Usera"], 400);
         }
 
     }

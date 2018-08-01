@@ -21,18 +21,23 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['prefix' => '1.0'], function () {
     Route::post('userregister',"UserController@userregister");
     Route::post('userLogin', 'UserController@userLogin');
+
 });
 
 
 Route::group(['prefix' => '1.0','middleware' => 'auth:api'], function () {
     Route::get('all', "NotesController@index");
     Route::get('note/{id}', "NotesController@show");
+    Route::get('notes/{id}', "NotesController@notes");
     Route::post('addnote', "NotesController@store");
-    Route::post('updatenote/{id}', "NotesController@update");
-    Route::post('deletenote/{id}', "NotesController@destroy");
+    Route::post('updatenote', "NotesController@update");
+    Route::post('sentbacktonotes', "NotesController@sentbacktonotes");
+    Route::post('senttotrash', "NotesController@senttotrash");
+    Route::post('updatecolor', "NotesController@updatecolor");
+    Route::post('deletenote', "NotesController@destroy");
 
     Route::post('userdetails', 'UserController@userdetails');
-    Route::post('userdetail/{id}', 'UserController@userdetail');
+    Route::post('userdetail', 'UserController@userdetail');
 
 });
 

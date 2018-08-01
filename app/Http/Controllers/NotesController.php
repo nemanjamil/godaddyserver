@@ -1,66 +1,80 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Validator;
 use App\Notes;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class NotesController extends Controller
+
+class NotesController extends BaseController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
-        //
-        return Notes::all();
+
+        return $this->responseOk("All Ok", Notes::all());
         //return DB::table('notes')->get();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+
+      /*  $validatedData = $request->validate([
+            'textnote' => 'required|max:255',
+            'typenote' => 'required',
+            //'title' => 'nullable'
+        ]);*/
+
+        $rules = array (
+            'textnote' => 'required|max:255',
+            'typenote' => 'required',
+            'title' => 'nullable'
+
+        );
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator-> fails()){
+
+            //return $this->respondValidationError('Fields Validation Failed.', $validator->errors());
+            return response()->json([
+                'success' => false,
+                'errors' =>  $validator->errors() ,
+                'message' => "One field in not correct"
+            ]);
+
+        }
+
+        $request['user_id'] = \Auth::user()->id;
+        $request['active'] = 1;
+        $request['color'] = 1;
+
         DB::beginTransaction();
         try {
             $noteId = DB::table('notes')->insertGetId($request->all());
             DB::commit();
+            sleep(1);
             return response()->json([
                 'success' => true,
-                'message' => 'Ok',
-                'data' => $noteId
+                'message' => $noteId,
+                'data' => Notes::find($noteId)
             ]);
         } catch (\Exception $e) {
             DB::rollback();
+
+            return response()->json([
+                'success' => false,
+                'message' => "Not Added"
+                ]);
+
         }
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Notes $notes
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Notes $notes,$id)
+
+    public function show(Notes $notes, $id)
     {
         $note = Notes::find($id);
         if ($note) {
@@ -74,16 +88,65 @@ class NotesController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Notes $notes
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Notes $notes)
+    public function notes(Notes $notes, $id)
     {
-        //
+        $user = User::find(\Auth::id());
+        $posts = $user->notestype($id)->get();
+        return $this->responseOk("All Ok", $posts);
     }
+
+
+
+    public function senttotrash(Notes $notes,Request $request)
+    {
+        $idnote = $request->input('id');
+        //$user = User::find(\Auth::id());
+        $notes = Notes::find($idnote);
+        if (\Auth::user()->id == $notes->user_id)
+        {
+            // $notes = Notes::with('userget')->get(); kako ide upit za dati userid i dati post id
+            $notes->active = 0;
+            $notes->save();
+
+            return $this->responseOk("All Ok", $notes);
+        } else {
+            return $this->responseNotValid("Not Ok, maybe this note not belong to user", $notes);
+        }
+    }
+
+    public function sentbacktonotes(Notes $notes,Request $request)
+    {
+        $idnote = $request->input('id');
+        //$user = User::find(\Auth::id());
+        $notes = Notes::find($idnote);
+        if (\Auth::user()->id == $notes->user_id)
+        {
+            $notes->active = 1;
+            $notes->save();
+
+            return $this->responseOk("All Ok", $notes);
+        } else {
+            return $this->responseNotValid("Not Ok, maybe this note not belong to user", $notes);
+        }
+    }
+
+    public function updatecolor(Notes $notes,Request $request)
+    {
+        $idnote = $request->input('id');
+        $idcolor = $request->input('color');
+
+        $notes = Notes::find($idnote);
+        if (\Auth::user()->id == $notes->user_id)
+        {
+            $notes->color = $idcolor;
+            $notes->save();
+            return $this->responseOk("All Ok", $notes);
+        } else {
+            return $this->responseNotValid("Not Ok, maybe this note not belong to user", $notes);
+        }
+    }
+
+
 
     /**
      * Update the specified resource in storage.
@@ -92,12 +155,12 @@ class NotesController extends Controller
      * @param  \App\Notes $notes
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         // 0
-        $note = Notes::findOrFail($id);
+        $note = Notes::findOrFail($request->input('id'));
         $note->update($request->all());
-        return $note;
+        return $this->responseOK("ok",$note);
 
         // 1
         /*$note = Notes::find($id);
@@ -126,13 +189,7 @@ class NotesController extends Controller
     }
 
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Notes $notes
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Notes $notes, $id)
+    public function destroy(Notes $notes,Request $request)
     {
 
         // verzija 1
@@ -145,7 +202,7 @@ class NotesController extends Controller
         }*/
 
         // verzija 2
-        $note = Notes::destroy($id);
+        $note = Notes::destroy($request->input('id'));
         return response()->json([
             'success' => true,
             'message' => 'Ok',
